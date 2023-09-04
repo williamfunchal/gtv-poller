@@ -1,1 +1,1 @@
-# bill-template-repo for billing repos
+# gtv-adapter-poller
