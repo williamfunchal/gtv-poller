@@ -2,12 +2,8 @@ inputs = {
 
   project_parameters = {
     gtv-poller = {
-        "sqs/adapter-isp-data-ready-url"       = "${ccsi-local.aws.endpoint}/000000000000/local-bill-ptf-adapter-isp-data-ready.fifo"
         "s3/integration-bucket-name"           = "local-bill-ptf-isp-gtv-integration-usw2"
         "s3/integration-customer-prefix"       = "GTV"
-        "scheduler/isp-data-delay"             = "10000"
-        "coredb/url"                           = "jdbc:oracle:thin:@coredev1-serv-usw2.czoqxvus1z1f.us-west-2.rds.amazonaws.com:1521:SERV"
-        "coredb/username"                      = "gtvadapter"
         "config/usage/enabled"                 = "true"
         "config/usage/batch_size"              = "1000"
         "config/usage/trigger/period"          = "5"
@@ -27,10 +23,13 @@ inputs = {
 
   namespace_parameters = {
     "graceful-shutdown-timeout"          = "30s"
+    "sqs/adapter-isp-data-ready-url"     = "${ccsi-local.aws.endpoint}/000000000000/local-bill-ptf-adapter-isp-data-ready.fifo"
     "sqs/message-visibility-timeout-sec" = "60"
     "sqs/message-wait-time-sec"          = "20"
     "sqs/fetch-size"                     = "10"
     "sqs/empty-timeout-mills"            = "60000"
+    "coredb/url"                         = "jdbc:oracle:thin:@coredev1-serv-usw2.czoqxvus1z1f.us-west-2.rds.amazonaws.com:1521:SERV"
+    "coredb/username"                    = "gtvadapter"
   }
 
   durable_project_parameters_local_values = {
