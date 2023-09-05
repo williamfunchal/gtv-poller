@@ -1,15 +1,15 @@
-package com.consensus.gtv.poller.models.dto.customer;
+package com.consensus.gtv.poller.models.dto;
 
 import com.opencsv.bean.CsvBindByName;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 @Data
 @Builder
-@AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class IspS3CustomerDTO {
+
     @CsvBindByName(column = "Op")
     private String op;
 

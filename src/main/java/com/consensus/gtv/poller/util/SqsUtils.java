@@ -1,6 +1,7 @@
 package com.consensus.gtv.poller.util;
 
 import com.amazonaws.services.sqs.model.MessageAttributeValue;
+import com.consensus.gtv.poller.models.sqs.BaseSqsEvent;
 import lombok.experimental.UtilityClass;
 import org.springframework.util.StringUtils;
 
@@ -10,9 +11,12 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static com.consensus.common.sqs.CCSIQueueConstants.MessageAttributes.CORRELATION_ID;
+import static com.consensus.common.sqs.CCSIQueueConstants.MessageAttributes.EVENT_TYPE;
 
 @UtilityClass
 public class SqsUtils {
+
+    public static final String EVENT_ID_ATTR = "EVENT_ID";
 
     public static MessageAttributeValue createAttribute(Object value) {
         return new MessageAttributeValue()
@@ -26,10 +30,11 @@ public class SqsUtils {
                 .filter(StringUtils::hasText).orElse("null");
     }
 
-    public static Map<String, MessageAttributeValue> createMessageAttributesWithCorrelationId(String correlationId){
+    public static Map<String, MessageAttributeValue> createMessageAttributes(BaseSqsEvent<?> sqsEvent) {
         Map<String, MessageAttributeValue> attributes = new HashMap<>();
-        final MessageAttributeValue correlationIdAttribute = createAttribute(correlationId);
-        attributes.put(CORRELATION_ID, correlationIdAttribute);
+        attributes.put(EVENT_ID_ATTR, createAttribute(sqsEvent.getEventId()));
+        attributes.put(EVENT_TYPE, createAttribute(sqsEvent.getEventType()));
+        attributes.put(CORRELATION_ID, createAttribute(sqsEvent.getCorrelationId()));
         return attributes;
     }
 }

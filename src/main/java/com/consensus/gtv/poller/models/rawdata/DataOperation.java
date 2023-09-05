@@ -2,28 +2,37 @@ package com.consensus.gtv.poller.models.rawdata;
 
 import lombok.Getter;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
 @Getter
 public enum DataOperation {
+
     CREATE("I"),
     UPDATE("U"),
     DELETE("D");
 
-    private final String operation;
+    private static final Map<String, DataOperation> CONSTANTS = new HashMap<>();
 
-    DataOperation(String operation) {
-        this.operation = operation;
-    }
-
-    public static String getValueString(DataOperation dataOperation) {
-        return dataOperation.operation;
-    }
-
-    public static DataOperation get(String operation) {
-        for (DataOperation dataOperation : DataOperation.values()) {
-            if (dataOperation.getOperation().equals(operation)) {
-                return dataOperation;
-            }
+    static {
+        for (DataOperation c : values()) {
+            CONSTANTS.put(c.value, c);
         }
-        throw new IllegalArgumentException("Invalid operation: " + operation);
+    }
+
+    private final String value;
+
+    DataOperation(String value) {
+        this.value = value;
+    }
+
+    public String value() {
+        return this.value;
+    }
+
+    public static DataOperation fromValue(String value) {
+        return Optional.ofNullable(CONSTANTS.get(value))
+                .orElseThrow(() -> new IllegalArgumentException("Unsupported operation exception: " + value));
     }
 }

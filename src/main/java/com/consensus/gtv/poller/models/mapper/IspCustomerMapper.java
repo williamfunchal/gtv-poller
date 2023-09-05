@@ -1,23 +1,18 @@
-package com.consensus.gtv.poller.mapper;
+package com.consensus.gtv.poller.models.mapper;
 
-import com.consensus.common.util.CCSIUUIDUtils;
-import com.consensus.gtv.poller.models.dto.customer.IspS3CustomerDTO;
-import com.consensus.gtv.poller.models.event.IspNewCustomerEvent;
+import com.consensus.gtv.poller.models.dto.IspS3CustomerDTO;
+import com.consensus.gtv.poller.models.sqs.IspNewCustomerEvent;
 import com.consensus.gtv.poller.models.rawdata.DataOperation;
 import com.consensus.gtv.poller.models.rawdata.IspCustomerData;
 import org.springframework.stereotype.Component;
 
-import java.util.UUID;
-
 @Component
-public class ISPDataReadyMapper {
+public class IspCustomerMapper {
 
-    public IspNewCustomerEvent map(IspS3CustomerDTO ispS3CustomerDTO){
-        String correlationId = CCSIUUIDUtils.generateUUID();
-        final IspNewCustomerEvent ispNewCustomerEvent = new IspNewCustomerEvent();
-        ispNewCustomerEvent.setCorrelationId(UUID.fromString(correlationId));
+    public IspNewCustomerEvent map(IspS3CustomerDTO ispS3CustomerDTO) {
+        IspNewCustomerEvent ispNewCustomerEvent = new IspNewCustomerEvent();
         ispNewCustomerEvent.setTableName("ISPCUSTOMER");
-        ispNewCustomerEvent.setOperation(DataOperation.get(ispS3CustomerDTO.getOp()));
+        ispNewCustomerEvent.setOperation(DataOperation.fromValue(ispS3CustomerDTO.getOp()));
         ispNewCustomerEvent.setData(IspCustomerData.builder()
                 .customerkey(ispS3CustomerDTO.getCustomerkey())
                 .company(ispS3CustomerDTO.getCompany())
