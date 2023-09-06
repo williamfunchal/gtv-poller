@@ -21,6 +21,8 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 @Component
 public class IspDataPublishService {
 
+    private static final int SQS_MAX_BATCH_SIZE = 10;
+
     private final AmazonSQS amazonSQS;
     private final CCSIQueueProperties dataReadyQueue;
     private final ObjectMapper objectMapper;
@@ -34,7 +36,7 @@ public class IspDataPublishService {
     public <T extends BaseSqsEvent<?>> void sendMessageBatch(List<T> messageBatch) {
         LOG.debug("Publishing message batch to SQS {}", messageBatch);
 
-        if (isEmpty(messageBatch) || messageBatch.size() > 10) {
+        if (isEmpty(messageBatch) || messageBatch.size() > SQS_MAX_BATCH_SIZE) {
             throw new IllegalArgumentException("Send SQS message batch size must be between 1 and 10");
         }
 
@@ -51,6 +53,6 @@ public class IspDataPublishService {
                 .withId(message.getEventId())
                 .withMessageBody(objectMapper.writeValueAsString(message))
                 .withMessageAttributes(SqsUtils.createMessageAttributes(message))
-                .withMessageGroupId("TBD");
+                .withMessageGroupId(message.getGroupId());
     }
 }

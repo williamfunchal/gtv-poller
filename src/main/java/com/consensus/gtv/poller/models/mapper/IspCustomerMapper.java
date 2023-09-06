@@ -1,5 +1,6 @@
 package com.consensus.gtv.poller.models.mapper;
 
+import com.consensus.common.util.CCSIUUIDUtils;
 import com.consensus.gtv.poller.models.dto.IspS3CustomerDTO;
 import com.consensus.gtv.poller.models.sqs.IspNewCustomerEvent;
 import com.consensus.gtv.poller.models.rawdata.DataOperation;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class IspCustomerMapper {
 
-    public IspNewCustomerEvent map(IspS3CustomerDTO ispS3CustomerDTO) {
+    public IspNewCustomerEvent toNewCustomerEvent(IspS3CustomerDTO ispS3CustomerDTO) {
         IspNewCustomerEvent ispNewCustomerEvent = new IspNewCustomerEvent();
         ispNewCustomerEvent.setTableName("ISPCUSTOMER");
         ispNewCustomerEvent.setOperation(DataOperation.fromValue(ispS3CustomerDTO.getOp()));
@@ -29,6 +30,9 @@ public class IspCustomerMapper {
                 .resellerId(ispS3CustomerDTO.getResellerId())
                 .offerCode(ispS3CustomerDTO.getOfferCode())
                 .build());
+
+        ispNewCustomerEvent.setEventId(CCSIUUIDUtils.generateUUID());
+        ispNewCustomerEvent.setCorrelationId(CCSIUUIDUtils.generateUUID());
 
         return ispNewCustomerEvent;
     }

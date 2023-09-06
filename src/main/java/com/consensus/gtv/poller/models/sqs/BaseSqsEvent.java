@@ -27,4 +27,7 @@ public abstract class BaseSqsEvent<T> {
     private String eventId;
     @JsonIgnore
     private String correlationId;
+
+    @JsonIgnore
+    public abstract String getGroupId();
 }

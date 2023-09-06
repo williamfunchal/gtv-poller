@@ -11,7 +11,7 @@
 
     <groupId>com.consensus.billplatform</groupId>
     <artifactId>gtv-poller</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <name>gtv-poller</name>
     <description>GTV Poller for Usage and Customer Data</description>
     <packaging>jar</packaging>

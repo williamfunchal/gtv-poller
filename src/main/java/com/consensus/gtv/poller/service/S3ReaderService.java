@@ -18,48 +18,55 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.toList;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class S3ReaderService<T> {
 
-    public static final String S3_ARCHIVE_FOLDER = "Archive/";
+    public static final String S3_ARCHIVE_FOLDER = "_Archive";
     private final AmazonS3 s3Client;
     private final AwsS3Properties awsS3Properties;
 
     public List<T> readCsvFromS3(Class<T> type) {
         List<T> objects = new ArrayList<>();
-        this.createArchiveFolder();
+        //createArchiveFolder();
 
-        List<S3ObjectSummary> s3ObjectSummaries = this.readS3WithSortedObjects();
+        List<S3ObjectSummary> s3ObjectSummaries = readS3SortedObjects();
         for (S3ObjectSummary s3ObjectSummary : s3ObjectSummaries) {
-            CsvToBean<T> csvToBean = this.mapS3ObjectSummaryToCsvToBean(s3ObjectSummary, type);
-            objects.addAll(csvToBean.parse());
-            this.archiveS3Object(s3ObjectSummary);
+            List<T> csvS3ObjectData = parseCsvFromS3Object(s3ObjectSummary, type);
+            objects.addAll(csvS3ObjectData);
         }
+
+        // Archive all files only when all data is parsed
+        // TODO Need to make it more resilient and archive only when data has been sent to SQS
+        s3ObjectSummaries.forEach(this::archiveS3Object);
 
         return objects;
     }
 
     // Read S3 bucket and return a list of objects sorted by name
-    private List<S3ObjectSummary> readS3WithSortedObjects() {
-        List<S3ObjectSummary> s3ObjectSummaries = s3Client.listObjects(
-                awsS3Properties.getBucketName(),
-                awsS3Properties.getCustomerPrefix())
-                .getObjectSummaries();
-        s3ObjectSummaries.sort(Comparator.comparing(S3ObjectSummary::getKey));
-
-        return s3ObjectSummaries;
+    private List<S3ObjectSummary> readS3SortedObjects() {
+        return s3Client.listObjects(awsS3Properties.getBucketName(), awsS3Properties.getCustomerPrefix() + "/")
+                .getObjectSummaries()
+                .stream()
+                .filter(s3Object -> s3Object.getKey().endsWith(".csv"))
+                .sorted(Comparator.comparing(S3ObjectSummary::getKey))
+                .collect(toList());
     }
 
     private void createArchiveFolder() {
         // verify if Archive folder exists. If not, create it
         try {
-            if (!s3Client.doesObjectExist(awsS3Properties.getBucketName(), awsS3Properties.getCustomerPrefix() + S3_ARCHIVE_FOLDER)) {
-                s3Client.putObject(awsS3Properties.getBucketName(), awsS3Properties.getCustomerPrefix() + S3_ARCHIVE_FOLDER, "");
+            String bucketName = awsS3Properties.getBucketName();
+            String prefix = awsS3Properties.getCustomerPrefix();
+            if (!s3Client.doesObjectExist(bucketName, prefix + S3_ARCHIVE_FOLDER)) {
+                s3Client.putObject(bucketName, prefix + S3_ARCHIVE_FOLDER, "");
             }
-        } catch (Exception e) {
-            LOG.error("Error creating Archive folder: " + e.getMessage());
+        } catch (Exception ex) {
+            LOG.error("Exception creating Archive folder: {}", ex.getMessage(), ex);
         }
     }
 
@@ -70,27 +77,26 @@ public class S3ReaderService<T> {
             s3Client.copyObject(awsS3Properties.getBucketName(), key, awsS3Properties.getBucketName(),
                     key.replace(awsS3Properties.getCustomerPrefix(), awsS3Properties.getCustomerPrefix() + S3_ARCHIVE_FOLDER));
             s3Client.deleteObject(awsS3Properties.getBucketName(), key);
-        } catch (Exception e) {
-            LOG.error("Error moving file to Archive folder: " + e.getMessage());
+        } catch (Exception ex) {
+            LOG.error("Exception moving file to archive file: {}", ex.getMessage(), ex);
         }
     }
 
-    // Map S3ObjectSummary to CsvToBean
-    public CsvToBean<T> mapS3ObjectSummaryToCsvToBean(S3ObjectSummary s3ObjectSummary, Class<T> type) {
-
+    public List<T> parseCsvFromS3Object(S3ObjectSummary s3ObjectSummary, Class<T> type) {
         String key = s3ObjectSummary.getKey();
         S3Object s3Object = s3Client.getObject(new GetObjectRequest(awsS3Properties.getBucketName(), key));
-        try (
-                S3ObjectInputStream inputStream = s3Object.getObjectContent();
+        try (S3ObjectInputStream inputStream = s3Object.getObjectContent();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
 
-            return new CsvToBeanBuilder<T>(reader)
+            CsvToBean<T> csvToBean = new CsvToBeanBuilder<T>(reader)
                     .withType(type)
                     .withIgnoreLeadingWhiteSpace(true)
                     .build();
-        } catch (Exception e) {
-            LOG.error("Error mapping S3ObjectSummary to CsvToBean: " + e.getMessage());
-            return null;
+
+            return csvToBean.parse();
+        } catch (Exception ex) {
+            LOG.error("Exception mapping S3 CSV object to CsvToBean: {}", ex.getMessage(), ex);
+            return emptyList();
         }
     }
 }

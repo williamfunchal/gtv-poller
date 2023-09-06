@@ -16,7 +16,7 @@ import static com.consensus.common.sqs.CCSIQueueConstants.MessageAttributes.EVEN
 @UtilityClass
 public class SqsUtils {
 
-    public static final String EVENT_ID_ATTR = "EVENT_ID";
+    public static final String EVENT_ID_ATTR = "event_id";
 
     public static MessageAttributeValue createAttribute(Object value) {
         return new MessageAttributeValue()

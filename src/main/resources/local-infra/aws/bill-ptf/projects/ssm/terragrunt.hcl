@@ -2,7 +2,7 @@ inputs = {
 
   project_parameters = {
     gtv-poller = {
-        "s3/integration-bucket-name"           = "local-bill-ptf-isp-gtv-integration-usw2"
+        "s3/integration-bucket-name"           = "${ccsi-local.aws.env}-${ccsi-local.aws.namespaces}-isp-gtv-integration-${ccsi-local.aws.regionCode}"
         "s3/integration-customer-prefix"       = "GTV"
         "config/usage/enabled"                 = "true"
         "config/usage/batch_size"              = "1000"

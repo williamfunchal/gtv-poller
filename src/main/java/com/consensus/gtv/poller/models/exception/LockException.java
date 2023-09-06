@@ -1,4 +1,4 @@
-package com.consensus.gtv.poller.exception;
+package com.consensus.gtv.poller.models.exception;
 
 public class LockException extends RuntimeException {
 

@@ -7,11 +7,13 @@ import lombok.With;
 
 import java.time.ZonedDateTime;
 
+import static java.time.ZoneOffset.UTC;
+
 @Data
 @With
 @NoArgsConstructor
 @AllArgsConstructor
 public class DbLockData {
 
-    private ZonedDateTime timestampPointer;
+    private ZonedDateTime timestampPointer = ZonedDateTime.now(UTC);
 }

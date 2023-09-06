@@ -13,4 +13,9 @@ public class IspNewUsageEvent extends BaseSqsEvent<IspUsageData> {
     public IspNewUsageEvent() {
         this.eventType = TYPE;
     }
+
+    @Override
+    public String getGroupId() {
+        return "usage";
+    }
 }
