@@ -27,6 +27,7 @@ import static java.util.stream.Collectors.toList;
 public class S3ReaderService<T> {
 
     public static final String S3_ARCHIVE_FOLDER = "_Archive";
+
     private final AmazonS3 s3Client;
     private final AwsS3Properties awsS3Properties;
 
@@ -41,7 +42,7 @@ public class S3ReaderService<T> {
         }
 
         // Archive all files only when all data is parsed
-        // TODO Need to make it more resilient and archive only when data has been sent to SQS
+        // TODO Need to make it more resilient and archive after data is sent to SQS
         s3ObjectSummaries.forEach(this::archiveS3Object);
 
         return objects;

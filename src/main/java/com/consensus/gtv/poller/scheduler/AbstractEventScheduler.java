@@ -53,6 +53,8 @@ public abstract class AbstractEventScheduler<T extends BaseSqsEvent<?>> implemen
         Trigger trigger = schedulerJob.getTrigger();
         var jobTrigger = new PeriodicTrigger(trigger.getPeriod(), trigger.getTimeUnit());
         taskRegistrar.addTriggerTask(this::pollEventsJob, jobTrigger);
+
+        LOG.warn("!!! {} event schedule trigger enabled !!!", capitalize(jobType()));
     }
 
     private void pollEventsJob() {
