@@ -81,3 +81,8 @@ security:
       - "/status"
       - "/status/**"
       - "/docs/**"
+
+logging:
+  level:
+    com.amazonaws: INFO
+    com.consensus: DEBUG
