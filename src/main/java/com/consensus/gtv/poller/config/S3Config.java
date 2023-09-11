@@ -43,7 +43,7 @@ public class S3Config {
                     .up();
 
             try {
-                s3Client.getBucketVersioningConfiguration(bucketName);
+                s3Client.listObjects(bucketName, "random-health-prefix");
             } catch (Exception ex) {
                 LOG.error("Exception during S3 health validation.", ex);
                 healthBuilder = healthBuilder.down()

@@ -52,7 +52,7 @@ aws:
       visibilityTimeout: ${/sqs/message-visibility-timeout-sec}
       waitTimeSeconds: ${/sqs/message-wait-time-sec}
       batchSize: ${/sqs/fetch-size}
-      emptyRecievedWaitTimeMil: ${/sqs/empty-timeout-mills:20000}
+      emptyReceivedWaitTimeMil: ${/sqs/empty-timeout-mills:20000}
       concurrency: 10
       enableTracing: true
 

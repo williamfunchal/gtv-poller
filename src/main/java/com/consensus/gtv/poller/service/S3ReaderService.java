@@ -50,7 +50,10 @@ public class S3ReaderService<T> {
 
     // Read S3 bucket and return a list of objects sorted by name
     private List<S3ObjectSummary> readS3SortedObjects() {
-        return s3Client.listObjects(awsS3Properties.getBucketName(), awsS3Properties.getCustomerPrefix() + "/")
+        String bucketName = awsS3Properties.getBucketName();
+        String prefix = awsS3Properties.getCustomerPrefix();
+        LOG.debug("Reading S3 objects from: {}/{}", bucketName, prefix);
+        return s3Client.listObjects(bucketName, prefix)
                 .getObjectSummaries()
                 .stream()
                 .filter(s3Object -> s3Object.getKey().endsWith(".csv"))
