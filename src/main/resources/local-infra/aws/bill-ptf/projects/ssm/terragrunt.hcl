@@ -10,8 +10,8 @@ inputs = {
         "config/usage/trigger/time_unit"       = "MINUTES"
         "config/customer/enabled"              = "true"
         "config/customer/batch_size"           = "1000"
-        "config/customer/trigger/period"       = "5"
-        "config/customer/trigger/time_unit"    = "MINUTES"
+        "config/customer/trigger/period"       = "30"
+        "config/customer/trigger/time_unit"    = "SECONDS"
         "config/lock/lease_duration"           = "15"
         "config/lock/heartbeat_period"         = "3"
     }
