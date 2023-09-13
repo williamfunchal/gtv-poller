@@ -11,7 +11,7 @@ import lombok.*;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class IspCustomerData {
 
-    private String customerkey;
+    private String customerKey;
     private String company;
     private String country;
     private String addressLine1;

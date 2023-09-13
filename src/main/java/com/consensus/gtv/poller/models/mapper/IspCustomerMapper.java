@@ -15,7 +15,7 @@ public class IspCustomerMapper {
         ispNewCustomerEvent.setTableName("ISPCUSTOMER");
         ispNewCustomerEvent.setOperation(DataOperation.fromValue(ispS3CustomerDTO.getOp()));
         ispNewCustomerEvent.setData(IspCustomerData.builder()
-                .customerkey(ispS3CustomerDTO.getCustomerkey())
+                .customerKey(ispS3CustomerDTO.getCustomerkey())
                 .company(ispS3CustomerDTO.getCompany())
                 .country(ispS3CustomerDTO.getCountry())
                 .addressLine1(ispS3CustomerDTO.getAddressLine1())

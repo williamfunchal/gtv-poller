@@ -9,7 +9,7 @@ import java.util.Optional;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class IspNewCustomerEvent extends BaseSqsEvent<IspCustomerData> {
 
-    public static final String TYPE = "isp-new-customer";
+    public static final String TYPE = "customer-isp-new";
 
     public IspNewCustomerEvent() {
         this.eventType = TYPE;
@@ -18,7 +18,7 @@ public class IspNewCustomerEvent extends BaseSqsEvent<IspCustomerData> {
     @Override
     public String getGroupId() {
         return Optional.ofNullable(data)
-                .map(IspCustomerData::getCustomerkey)
+                .map(IspCustomerData::getCustomerKey)
                 .orElse(TYPE);
     }
 }
