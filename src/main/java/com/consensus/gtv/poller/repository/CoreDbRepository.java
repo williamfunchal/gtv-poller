@@ -15,13 +15,13 @@ public class CoreDbRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public String getCloudDbTime() {
-        return jdbcTemplate.queryForObject("SELECT CURRENT_DATE FROM dual", String.class);
-    }
-
-    public List<IspUsageDTO> getUsageEvents(ZonedDateTime startTimestamp, ZonedDateTime endTimestamp, int limit) {
-        // TODO write query for usage events
+    public List<IspUsageDTO> getUsageInboxEvents(ZonedDateTime startTimestamp, ZonedDateTime endTimestamp, int limit) {
+        // TODO write query for usage inbox events
         return Collections.emptyList();
     }
 
+    public List<IspUsageDTO> getUsageOutboxEvents(ZonedDateTime startTimestamp, ZonedDateTime endTimestamp, int batchSize) {
+        // TODO write query for usage outbox events
+        return Collections.emptyList();
+    }
 }

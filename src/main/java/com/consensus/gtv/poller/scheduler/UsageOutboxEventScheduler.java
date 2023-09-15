@@ -19,15 +19,15 @@ import static java.util.stream.Collectors.toList;
 
 @Slf4j
 @Component
-public class UsageEventScheduler extends AbstractEventScheduler<IspNewUsageEvent> {
+public class UsageOutboxEventScheduler extends AbstractEventScheduler<IspNewUsageEvent> {
 
-    private static final String JOB_NAME = "usage";
-    private static final String JOB_LOCK_ID = "USAGE_POLLER_JOB_LOCK";
+    private static final String JOB_NAME = "usage outbox";
+    private static final String JOB_LOCK_ID = "USAGE_OUTBOX_POLLER_JOB_LOCK";
 
     private final CoreDbRepository coreDbRepository;
     private final IspUsageMapper ispUsageMapper;
 
-    public UsageEventScheduler(IspDataPublishService ispDataPublishService, CoreDbRepository coreDbRepository,
+    public UsageOutboxEventScheduler(IspDataPublishService ispDataPublishService, CoreDbRepository coreDbRepository,
             LockRepository lockRepository, PollerProperties pollerProperties, ObjectMapper objectMapper,
             IspUsageMapper ispUsageMapper) {
         super(ispDataPublishService, lockRepository, pollerProperties.getUsage(), objectMapper);
@@ -50,12 +50,12 @@ public class UsageEventScheduler extends AbstractEventScheduler<IspNewUsageEvent
         ZonedDateTime startTimestamp = dbLockData.getTimestampPointer();
         ZonedDateTime endTimestamp = ZonedDateTime.now(UTC);
 
-        List<IspNewUsageEvent> events = coreDbRepository.getUsageEvents(startTimestamp, endTimestamp, batchSize)
+        List<IspNewUsageEvent> events = coreDbRepository.getUsageOutboxEvents(startTimestamp, endTimestamp, batchSize)
                 .stream()
                 .map(ispUsageMapper::toNewUsageEvent)
                 .collect(toList());
 
-        LOG.debug("Pooled 'IspNewUsageEvent' events: {}", events);
+        LOG.debug("Pooled 'IspNewUsageEvent' outbox events: {}", events);
 
         return JobPollResult.<IspNewUsageEvent>builder()
                 .polledEvents(events)
