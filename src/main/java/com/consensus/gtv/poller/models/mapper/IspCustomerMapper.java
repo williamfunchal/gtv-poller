@@ -26,7 +26,6 @@ public class IspCustomerMapper {
                 .emailAddress(ispS3CustomerDTO.getEmailAddress())
                 .startDate(ispS3CustomerDTO.getStartDate())
                 .currencyCode(ispS3CustomerDTO.getCurrencyCode())
-                //.paymentTerms(ispS3CustomerDTO.getPaymentTerms()) TODO - check if this is needed
                 .resellerId(ispS3CustomerDTO.getResellerId())
                 .offerCode(ispS3CustomerDTO.getOfferCode())
                 .build());

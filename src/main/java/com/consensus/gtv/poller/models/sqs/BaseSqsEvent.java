@@ -1,7 +1,6 @@
 package com.consensus.gtv.poller.models.sqs;
 
 import com.consensus.gtv.poller.models.rawdata.DataOperation;
-import com.consensus.gtv.poller.models.rawdata.IspUsageData;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -14,7 +13,9 @@ import lombok.Data;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "event_type", visible = true)
 @JsonSubTypes({
         @JsonSubTypes.Type(value = IspNewUsageEvent.class, name = IspNewUsageEvent.TYPE),
-        @JsonSubTypes.Type(value = IspNewCustomerEvent.class, name = IspNewCustomerEvent.TYPE)
+        @JsonSubTypes.Type(value = IspNewCustomerEvent.class, name = IspNewCustomerEvent.TYPE),
+        @JsonSubTypes.Type(value = IspServiceEvent.class, name = IspServiceEvent.TYPE),
+        @JsonSubTypes.Type(value = IspCorpProfileEvent.class, name = IspCorpProfileEvent.TYPE)
 })
 public abstract class BaseSqsEvent<T> {
 

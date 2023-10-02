@@ -1,5 +1,6 @@
 package com.consensus.gtv.poller;
 
+import com.consensus.gtv.poller.config.properties.AwsS3Properties;
 import com.consensus.gtv.poller.config.properties.PollerProperties;
 import com.consensus.gtv.poller.config.properties.QueueProperties;
 import org.springframework.boot.SpringApplication;
@@ -17,7 +18,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         "com.consensus.common.dynamo.db",
         "com.consensus.common.health"
 })
-@EnableConfigurationProperties({QueueProperties.class, PollerProperties.class})
+@EnableConfigurationProperties({QueueProperties.class, PollerProperties.class, AwsS3Properties.class})
 public class GtvPollerService {
     
     public static void main(String[] args) {

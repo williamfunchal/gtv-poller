@@ -1,0 +1,21 @@
+{
+  "bucketName": "${ccsi-local.aws.env}-${ccsi-local.aws.namespaces}-isp-gtv-integration-${ccsi-local.aws.regionCode}",
+  "files": [
+    {
+      "localFilePath": "ISPPOWER.ISPCUSTOMER/20230803-020642755.csv",
+      "s3Path": "ISPPOWER.ISPCUSTOMER/20230803-020642755.csv"
+    },
+    {
+      "localFilePath": "ISPPOWER.ISPCUSTOMER/20230906-100642757.csv",
+      "s3Path": "ISPPOWER.ISPCUSTOMER/20230906-100642757.csv"
+    },
+    {
+      "localFilePath": "ISPPOWER.ISPSERVICE/20230929-020642700.csv",
+      "s3Path": "ISPPOWER.ISPSERVICE/20230929-020642700.csv"
+    },
+    {
+      "localFilePath": "ISPPOWER.J2_CORP_PROFILE/20230929-020642700.csv",
+      "s3Path": "ISPPOWER.J2_CORP_PROFILE/20230929-020642700.csv"
+    }
+  ]
+}

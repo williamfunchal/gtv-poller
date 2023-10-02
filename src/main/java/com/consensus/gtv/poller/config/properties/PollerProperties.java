@@ -11,6 +11,8 @@ public class PollerProperties {
 
     private PollerJob usage;
     private PollerJob customer;
+    private PollerJob service;
+    private PollerJob corpProfile;
     private LockProperties lock;
 
     @Data

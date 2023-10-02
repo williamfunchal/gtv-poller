@@ -6,8 +6,8 @@ import com.consensus.gtv.poller.models.dto.IspS3CustomerDTO;
 import com.consensus.gtv.poller.models.mapper.IspCustomerMapper;
 import com.consensus.gtv.poller.models.sqs.IspNewCustomerEvent;
 import com.consensus.gtv.poller.repository.LockRepository;
+import com.consensus.gtv.poller.service.CustomerS3ReaderService;
 import com.consensus.gtv.poller.service.IspDataPublishService;
-import com.consensus.gtv.poller.service.S3ReaderService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,15 +23,15 @@ public class CustomerEventScheduler extends AbstractEventScheduler<IspNewCustome
     private static final String JOB_NAME = "customer";
     private static final String JOB_LOCK_ID = "CUSTOMER_POLLER_JOB_LOCK";
 
-    private final S3ReaderService<IspS3CustomerDTO> s3ReaderService;
+    private final CustomerS3ReaderService customerS3ReaderService;
     private final IspCustomerMapper ispCustomerMapper;
 
     public CustomerEventScheduler(IspDataPublishService ispDataPublishService,
-            S3ReaderService<IspS3CustomerDTO> s3ReaderService,
+            CustomerS3ReaderService customerS3ReaderService,
             LockRepository lockRepository, PollerProperties pollerProperties,
             IspCustomerMapper ispCustomerMapper, ObjectMapper objectMapper) {
         super(ispDataPublishService, lockRepository, pollerProperties.getCustomer(), objectMapper);
-        this.s3ReaderService = s3ReaderService;
+        this.customerS3ReaderService = customerS3ReaderService;
         this.ispCustomerMapper = ispCustomerMapper;
     }
 
@@ -47,7 +47,7 @@ public class CustomerEventScheduler extends AbstractEventScheduler<IspNewCustome
 
     @Override
     protected JobPollResult<IspNewCustomerEvent> pollEvents(DbLockData dbLockData, int batchSize) {
-        List<IspNewCustomerEvent> events = s3ReaderService.readCsvFromS3(IspS3CustomerDTO.class)
+        List<IspNewCustomerEvent> events = customerS3ReaderService.readCsvFromS3(IspS3CustomerDTO.class)
                 .stream()
                 .map(ispCustomerMapper::toNewCustomerEvent)
                 .collect(toList());

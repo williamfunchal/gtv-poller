@@ -3,7 +3,6 @@ package com.consensus.gtv.poller.models.sqs;
 import com.consensus.gtv.poller.models.rawdata.IspUsageData;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import lombok.Data;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class IspNewUsageEvent extends BaseSqsEvent<IspUsageData> {

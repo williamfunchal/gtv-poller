@@ -45,6 +45,8 @@ aws:
   s3:
     bucketName: ${/s3/integration-bucket-name}
     customerPrefix: ${/s3/integration-customer-prefix}
+    servicePrefix: ${/s3/integration-service-prefix}
+    corpProfilePrefix: ${/s3/integration-corp-profile-prefix}
   sqs:
     isp-data-ready:
       queueUrl: ${/sqs/adapter-isp-data-ready-url}
@@ -73,6 +75,18 @@ poller:
       trigger:
         period: ${/config/customer/trigger/period}
         time_unit: ${/config/customer/trigger/time_unit}
+    service:
+      enabled: ${/config/service/enabled:true}
+      batch_size: ${/config/service/batch_size}
+      trigger:
+        period: ${/config/service/trigger/period}
+        time_unit: ${/config/service/trigger/time_unit}
+    corp_profile:
+      enabled: ${/config/corp-profile/enabled:false}
+      batch_size: ${/config/corp-profile/batch_size}
+      trigger:
+        period: ${/config/corp-profile/trigger/period}
+        time_unit: ${/config/corp-profile/trigger/time_unit}
 
 security:
   paths:
